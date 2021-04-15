@@ -7,13 +7,11 @@ fn test_non_productive(grammar: Grammar, expected_non_productive: &[&str]) {
 
     let non_productive = find_useless_productions(&grammar);
 
-    println!("Non-productive productions: {:#?}", non_productive);
-
     let non_productive = non_productive
         .into_iter()
         .map(|pr| pr.to_string()).collect::<HashSet<_>>();
 
-    println!("Non-productive productions: {:#?}", non_productive);
+    // println!("Non-productive productions: {:#?}", non_productive);
 
     let expected_non_productive =
         HashSet::from_iter(
@@ -131,6 +129,128 @@ fn test_1() {
         "F -> F a",
         "G -> a G",
         "E -> G"
+    ]);
+
+}
+
+#[test]
+fn test_2() {
+
+    let mut grammar = Grammar::new("S".to_string());
+
+    grammar.add_production("S".to_string(), vec![
+        "A".to_string()
+    ]);
+
+    grammar.add_production("S".to_string(), vec![
+        "a".to_string()
+    ]);
+
+    grammar.add_production("A".to_string(), vec![
+        "B".to_string()
+    ]);
+
+    grammar.add_production("A".to_string(), vec![
+        "b".to_string()
+    ]);
+
+    grammar.add_production("B".to_string(), vec![
+        "S".to_string()
+    ]);
+
+    grammar.add_production("B".to_string(), vec![
+        "c".to_string()
+    ]);
+
+    test_non_productive(grammar, &[]);
+
+}
+
+#[test]
+fn test_3() {
+
+    let mut grammar = Grammar::new("S".to_string());
+
+    grammar.add_production("S".to_string(), vec![
+        "A".to_string()
+    ]);
+
+    grammar.add_production("S".to_string(), vec![
+        "a".to_string()
+    ]);
+
+    grammar.add_production("A".to_string(), vec![
+        "B".to_string()
+    ]);
+
+    grammar.add_production("B".to_string(), vec![
+        "C".to_string()
+    ]);
+
+    grammar.add_production("C".to_string(), vec![
+        "A".to_string()
+    ]);
+
+    test_non_productive(grammar, &[
+        "S -> A",
+        "A -> B",
+        "B -> C",
+        "C -> A"
+    ]);
+
+}
+
+#[test]
+fn test_4() {
+
+    let mut grammar = Grammar::new("S".to_string());
+
+    grammar.add_production("S".to_string(), vec![
+        "A".to_string()
+    ]);
+
+    grammar.add_production("A".to_string(), vec![]);
+
+    grammar.add_production("B".to_string(), vec![
+        "C".to_string(),
+        "a".to_string()
+    ]);
+
+    grammar.add_production("C".to_string(), vec![
+        "b".to_string(),
+        "B".to_string()
+    ]);
+
+    test_non_productive(grammar, &[
+        "B -> C a",
+        "C -> b B"
+    ]);
+
+}
+
+#[test]
+fn test_5() {
+
+    let mut grammar = Grammar::new("S".to_string());
+
+    grammar.add_production("S".to_string(), vec![
+        "A".to_string()
+    ]);
+
+    grammar.add_production("B".to_string(), vec![
+        "C".to_string(),
+        "a".to_string()
+    ]);
+
+    grammar.add_production("C".to_string(), vec![
+        "b".to_string(),
+        "B".to_string()
+    ]);
+
+    test_non_productive(grammar, &[
+        "S -> A",
+        "B -> C a",
+        "C -> b B"
     ]);
 
 }
