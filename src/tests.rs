@@ -1,19 +1,19 @@
 use crate::grammar::Grammar;
-use std::borrow::Borrow;
 use std::collections::HashSet;
-use std::convert::TryFrom;
 use std::iter::FromIterator;
 use crate::useless::find_useless_productions;
 
 fn test_non_productive(grammar: Grammar, expected_non_productive: &[&str]) {
 
-    let mut non_productive = find_useless_productions(&grammar);
+    let non_productive = find_useless_productions(&grammar);
 
     println!("Non-productive productions: {:#?}", non_productive);
 
     let non_productive = non_productive
         .into_iter()
         .map(|pr| pr.to_string()).collect::<HashSet<_>>();
+
+    println!("Non-productive productions: {:#?}", non_productive);
 
     let expected_non_productive =
         HashSet::from_iter(
@@ -29,7 +29,7 @@ fn test_non_productive(grammar: Grammar, expected_non_productive: &[&str]) {
 }
 
 #[test]
-fn productive_grammar_with_cycles() {
+fn test_1() {
 
     let mut grammar = Grammar::new("S".to_string());
 
@@ -123,14 +123,14 @@ fn productive_grammar_with_cycles() {
     ]);
 
     test_non_productive(grammar, &[
-        "s -> h",
-        "d -> Af",
-        "h -> Bf",
-        "s -> xegB",
-        "h -> h",
-        "f -> fA",
-        "g -> Ag",
-        "e -> g"
+        "S -> H",
+        "D -> a F",
+        "H -> b F",
+        "S -> X E G b",
+        "H -> H",
+        "F -> F a",
+        "G -> a G",
+        "E -> G"
     ]);
 
 }

@@ -1,7 +1,6 @@
 use std::collections::HashMap;
 use std::rc::Rc;
 use std::fmt::{Display, Formatter};
-use std::intrinsics::write_bytes;
 
 #[derive(PartialEq, Eq, Hash, Ord, PartialOrd, Debug)]
 pub enum Symbol {
