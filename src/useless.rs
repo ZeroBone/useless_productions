@@ -122,8 +122,6 @@ impl FindUselessProductions {
 
                             visited.insert(pr.clone());
 
-                            // println!("{:#?} -> {:#?}", node, single_nonterminal_node(pr.0));
-
                             stack.push(single_nonterminal_node(&pr.0));
 
                         }
@@ -145,14 +143,11 @@ impl FindUselessProductions {
                                 .or_insert_with(|| symbols.len());
 
                             debug_assert!(*counter >= 1);
-                            // println!("Node: {:#?} Counter: {} Symbols: {:?}", node, *counter, symbols);
 
                             if *counter == 1 {
                                 // this is the last remaining edge to the node
                                 // containing a set of nonterminals -
                                 // we therefore go over this edge in our dfs
-
-                                // println!("{:#?} --> {:#?}", node, symbols);
 
                                 stack.push(symbols.clone());
 
@@ -181,8 +176,6 @@ impl FindUselessProductions {
     fn get_non_productive_productions(&self, grammar: &Grammar) -> HashSet<ProductionReference> {
 
         let productive_productions = self.get_productive_productions();
-
-        // println!("Productive productions: {:#?}", productive_productions);
 
         let all_productions = grammar
             .all_productions()
