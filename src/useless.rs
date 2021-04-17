@@ -13,13 +13,9 @@ struct FindUselessProductions {
 }
 
 fn single_nonterminal_node(symbol: &Rc<Symbol>) -> BTreeSet<Rc<Symbol>> {
-
     let mut set = BTreeSet::new();
-
     set.insert(Rc::clone(symbol));
-
     set
-
 }
 
 impl FindUselessProductions {
@@ -97,7 +93,6 @@ impl FindUselessProductions {
             .entry(right_nonterminals)
             .or_insert_with(|| vec![])
             .push(Edge::Production(ProductionReference(label, body)));
-
     }
 
     fn get_productive_productions(&self) -> HashSet<ProductionReference> {
@@ -144,20 +139,15 @@ impl FindUselessProductions {
 
                             debug_assert!(*counter >= 1);
 
-                            if *counter == 1 {
-                                // this is the last remaining edge to the node
-                                // containing a set of nonterminals -
+                            *counter -= 1;
+
+                            if *counter == 0 {
+                                // this is the last remaining edge to a compound node
                                 // we therefore go over this edge in our dfs
 
                                 stack.push(symbols.clone());
-
                             }
-                            else {
-                                *counter -= 1;
-                            }
-
                         }
-
                     }
                 }
 
@@ -170,7 +160,6 @@ impl FindUselessProductions {
         }
 
         visited
-
     }
 
     fn get_non_productive_productions(&self, grammar: &Grammar) -> HashSet<ProductionReference> {
@@ -185,19 +174,14 @@ impl FindUselessProductions {
             .difference(&productive_productions)
             .map(|e| e.clone())
             .collect::<HashSet<ProductionReference>>()
-
     }
 
 }
 
 pub fn find_useless_productions(grammar: &Grammar) -> HashSet<ProductionReference> {
-
     let mut useless = FindUselessProductions::new();
-
     for pr in grammar.all_productions() {
         useless.handle_production(pr);
     }
-
     useless.get_non_productive_productions(grammar)
-
 }
