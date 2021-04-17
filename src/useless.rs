@@ -46,7 +46,7 @@ impl FindUselessProductions {
             .or_insert_with(|| vec![]);
 
         if right_nonterminals.is_empty() {
-            // this production contains only terminal symbols on it's right hand sides
+            // this production contains only terminal symbols on its right hand side
             // it is therefore productive
 
             self.starting_productions.insert(ProductionReference(label, body));
