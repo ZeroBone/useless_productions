@@ -11,8 +11,6 @@ fn test_non_productive(grammar: Grammar, expected_non_productive: &[&str]) {
         .into_iter()
         .map(|pr| pr.to_string()).collect::<HashSet<_>>();
 
-    // println!("Non-productive productions: {:#?}", non_productive);
-
     let expected_non_productive =
         HashSet::from_iter(
             expected_non_productive
@@ -62,7 +60,7 @@ fn test_1() {
     ]);
 
     grammar.add_production("D".to_string(), vec![
-        "s".to_string()
+        "S".to_string()
     ]);
 
     grammar.add_production("D".to_string(), vec![]);
