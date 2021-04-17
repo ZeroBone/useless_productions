@@ -31,19 +31,14 @@ impl FindUselessProductions {
 
         let ProductionReference(label, body) = pr;
 
-        let mut right_nonterminals = BTreeSet::new();
-
-        for symbol in &*body {
-
-            let symbol = &*symbol;
-
-            if symbol.is_terminal() {
-                continue;
-            }
-
-            right_nonterminals.insert(Rc::clone(symbol));
-
-        }
+        let right_nonterminals = body
+            .iter()
+            .filter_map(|symbol| if symbol.is_nonterminal() {
+                Some(Rc::clone(symbol))
+            } else {
+                None
+            })
+            .collect::<BTreeSet<_>>();
 
         // create node for the label of the current production if the node is not yet present
         self.graph
@@ -51,18 +46,15 @@ impl FindUselessProductions {
             .or_insert_with(|| vec![]);
 
         if right_nonterminals.is_empty() {
-
             // this production contains only terminal symbols on it's right hand sides
             // it is therefore productive
 
             self.starting_productions.insert(ProductionReference(label, body));
 
             return;
-
         }
 
         if right_nonterminals.len() == 1 {
-
             let key = single_nonterminal_node(
                 right_nonterminals.iter().next().unwrap()
             );
@@ -73,20 +65,17 @@ impl FindUselessProductions {
                 .push(Edge::Production(ProductionReference(label, body)));
 
             return;
-
         }
 
         debug_assert!(right_nonterminals.len() >= 2);
 
         for nonterminal in right_nonterminals.iter() {
-
             debug_assert!(nonterminal.is_nonterminal());
 
             self.graph
                 .entry(single_nonterminal_node(nonterminal))
                 .or_insert_with(|| vec![])
                 .push(Edge::CountDown(right_nonterminals.clone()));
-
         }
 
         self.graph
